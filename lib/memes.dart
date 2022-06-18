@@ -12,8 +12,8 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes_max/config.dart';
 import 'package:memes_max/models/themeMeme.dart';
-import 'package:memes_max/screens/widgets/sheet_settings.dart';
-import 'package:memes_max/sheets/sheets_meme_options.dart';
+import 'package:memes_max/sheets/sheet_settings.dart';
+import 'package:memes_max/sheets/sheet_meme_options.dart';
 import 'package:memes_max/submission.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -41,7 +41,7 @@ class MemeList extends StatefulWidget {
 String subred = "memes";
 List<Meme> memes = [];
 Queue memesQueue = Queue();
-GlobalKey myKey = GlobalKey();
+// GlobalKey myKey = GlobalKey();
 
 class MemeListState extends State<MemeList> {
   final StreamController<List<Meme>> _streamController = StreamController();
@@ -472,6 +472,7 @@ class MemeListState extends State<MemeList> {
   }
 
   bool imageFilter(dynamic element) {
+    bool hasCrappyInternet = GetIt.I<ThemeMeme>().hasCrappyInternet;
     return element['url'].toString().contains("i.redd") &&
         !element['url'].toString().contains(".gif") &&
         ((hasCrappyInternet &&

@@ -9,6 +9,7 @@ import 'package:draw/draw.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
 import 'package:memes_max/config.dart';
 import 'package:memes_max/models/themeMeme.dart';
 import 'package:memes_max/submission.dart';
@@ -184,7 +185,7 @@ class MemePagesState extends State<MemePages> {
                         height: 40,
                         splashColor: appColors[val.selectedAppColor].accent,
                         onPressed: () {
-                          learn++;
+                          GetIt.I<ThemeMeme>().learn++;
                           addScore();
                           Navigator.pop(context);
                           _showToast(
@@ -215,7 +216,7 @@ class MemePagesState extends State<MemePages> {
                         height: 40,
                         splashColor: appColors[val.selectedAppColor].accent,
                         onPressed: () {
-                          learn++;
+                          GetIt.I<ThemeMeme>().learn++;
                           addScore();
                           Navigator.pop(context);
                           _showToast(
@@ -511,6 +512,7 @@ class MemePagesState extends State<MemePages> {
   }
 
   bool imageFilter(dynamic element) {
+    bool hasCrappyInternet = GetIt.I<ThemeMeme>().hasCrappyInternet;
     return element['url'].toString().contains("i.redd") &&
         !element['url'].toString().contains(".gif") &&
         ((hasCrappyInternet &&

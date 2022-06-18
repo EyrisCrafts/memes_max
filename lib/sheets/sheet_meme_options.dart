@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes_max/models/themeMeme.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +26,7 @@ class SheetsMemeOptions extends StatelessWidget {
               height: 40,
               splashColor: appColors[val.selectedAppColor].accent,
               onPressed: () {
-                learn++;
+                GetIt.I<ThemeMeme>().learn++;
                 // addScore();
                 Navigator.pop(context);
                 GetIt.I<ThemeMeme>()
@@ -59,16 +57,11 @@ class SheetsMemeOptions extends StatelessWidget {
               height: 40,
               splashColor: appColors[val.selectedAppColor].accent,
               onPressed: () {
-                learn++;
+                GetIt.I<ThemeMeme>().learn++;
                 // addScore();
                 Navigator.pop(context);
                 GetIt.I<ThemeMeme>()
                     .showToast(Icons.thumb_down, "Learned Preference");
-                // _showToast(
-                //   size,
-                //   "Learned Preference",
-                //   Icon(Icons.thumb_up, color: Colors.white),
-                // );
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,7 +73,7 @@ class SheetsMemeOptions extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           SizedBox(
             width: size.width * 0.8,
             child: MaterialButton(
@@ -95,7 +88,7 @@ class SheetsMemeOptions extends StatelessWidget {
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: const [
                   Text("Save to Favorites",
                       style: TextStyle(color: Colors.white)),
                   Icon(Icons.favorite, color: Colors.white)
@@ -103,7 +96,7 @@ class SheetsMemeOptions extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           SizedBox(
             width: size.width * 0.8,
             child: MaterialButton(

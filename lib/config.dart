@@ -20,17 +20,10 @@ class BackgroundColor {
 
 int learn = 87;
 
-bool hasCrappyInternet = false;
-bool isScrollableList = true;
-// bool isDarkMode = false;
-// int selectedBackground = 1;
 List<BackgroundColor> backgroundColors = [
   BackgroundColor(Colors.grey, Colors.white),
-  //TODO Change color to 1B2836
-  BackgroundColor(Color(0xff1B2836), Color(0xff003f87)),
+  BackgroundColor(const Color(0xff1B2836), const Color(0xff003f87)),
 ];
-
-// int selectedAppColor = 0;
 
 final List<AppColor> appColors = [
   AppColor(Colors.pink, Colors.pinkAccent, Colors.pink.shade800),

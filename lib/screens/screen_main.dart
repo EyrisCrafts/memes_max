@@ -12,6 +12,7 @@ import 'package:memes_max/submission.dart';
 import 'package:memes_max/widgets/button_choice.dart';
 import 'package:memes_max/widgets/memes_pages.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/last_meme.dart';
@@ -64,20 +65,18 @@ class _ScreenMainState extends State<ScreenMain> {
                         alignment: Alignment.centerLeft,
                         child: Consumer<ThemeMeme>(builder: (context, val, _) {
                           return Container(
-                            height: 40,
-                            width: 40,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: appColors[val.selectedAppColor].main,
-                                borderRadius: BorderRadius.circular(20)),
-                            child: IconButton(
+                              height: 40,
+                              width: 40,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: appColors[val.selectedAppColor].main,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: IconButton(
                                 iconSize: 20,
                                 icon: const Icon(Icons.settings,
                                     color: Colors.white),
-                                onPressed: () {
-                                  openSettings(size);
-                                }),
-                          );
+                                onPressed: openSettings,
+                              ));
                         }),
                       ),
                       Align(
@@ -115,13 +114,8 @@ class _ScreenMainState extends State<ScreenMain> {
                                     icon: const Icon(Icons.share,
                                         color: Colors.white),
                                     onPressed: () {
-                                      // myintent.Intent()
-                                      //   ..setAction(myaction.Action.ACTION_SEND)
-                                      //   ..setType('text/plain')
-                                      //   ..putExtra(Extra.EXTRA_TEXT,
-                                      //       "https://play.google.com/store/apps/details?id=com.eyriscrafts.memesmax")
-                                      //   ..startActivity()
-                                      //       .catchError((e) => print(e));
+                                      Share.share(
+                                          "https://play.google.com/store/apps/details?id=com.eyriscrafts.memesmax");
                                     }),
                               );
                             }),
@@ -152,7 +146,6 @@ class _ScreenMainState extends State<ScreenMain> {
                       ),
                     ],
                   ),
-                  // <--- this is required if I want the application bar to show when I scroll up
                 ),
               ];
             },
@@ -161,19 +154,21 @@ class _ScreenMainState extends State<ScreenMain> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   reddit = snapshot.data!;
-                  return Container(
-                    child: isScrollableList
-                        ? MemeList(
-                            key: memeListKey,
-                            reddit: reddit,
-                            currentSub: memesType,
-                          )
-                        : MemePages(
-                            key: memePageKey,
-                            reddit: reddit,
-                            currentSub: memesType,
-                          ),
-                  );
+                  return Consumer<ThemeMeme>(builder: (context, val, _) {
+                    return Container(
+                      child: val.isScrollableList
+                          ? MemeList(
+                              key: memeListKey,
+                              reddit: reddit,
+                              currentSub: memesType,
+                            )
+                          : MemePages(
+                              key: memePageKey,
+                              reddit: reddit,
+                              currentSub: memesType,
+                            ),
+                    );
+                  });
                 }
                 return Container(
                   height: 4,
@@ -197,7 +192,7 @@ class _ScreenMainState extends State<ScreenMain> {
         });
   }
 
-  openSettings(Size size) {
+  openSettings() {
     showModalBottomSheet(
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(
@@ -209,40 +204,15 @@ class _ScreenMainState extends State<ScreenMain> {
         });
   }
 
-  saveScrollablePreferences(bool isScrollableList) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('scrollable', isScrollableList);
-  }
-
-  saveInternetPreferences(bool hasCrappyInternet) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('internet', hasCrappyInternet);
-  }
-
-  saveDarkPreferences(bool darkmode) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('darkmode', darkmode);
-  }
-
-  saveSelectedAccent(int index) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('accent', index);
-  }
-
-  saveSelectedBackground(int index) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('background', index);
-  }
-
   onTapBottomSheet(Size size) {
     showModalBottomSheet(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
         isScrollControlled: true,
         builder: (context) {
-          return Container(
+          return SizedBox(
             width: size.width,
             height: 400,
             child: Consumer<ThemeMeme>(builder: (context, val, _) {
@@ -275,7 +245,7 @@ class _ScreenMainState extends State<ScreenMain> {
                           memes.clear();
                           memesQueue.clear();
                         });
-                        if (isScrollableList) {
+                        if (GetIt.I<ThemeMeme>().isScrollableList) {
                           memeListKey.currentState?.requestNextPage();
                         } else {
                           memePageKey.currentState?.requestNextPage();
@@ -306,7 +276,7 @@ class _ScreenMainState extends State<ScreenMain> {
                           subred = "dankmemes";
                           memes.clear();
                           memesQueue.clear();
-                          if (isScrollableList) {
+                          if (GetIt.I<ThemeMeme>().isScrollableList) {
                             memeListKey.currentState?.requestNextPage();
                           } else {
                             memePageKey.currentState?.requestNextPage();
@@ -341,7 +311,7 @@ class _ScreenMainState extends State<ScreenMain> {
                           subred = "AdviceAnimals";
                           memes.clear();
                           memesQueue.clear();
-                          if (isScrollableList) {
+                          if (GetIt.I<ThemeMeme>().isScrollableList) {
                             memeListKey.currentState?.requestNextPage();
                           } else {
                             memePageKey.currentState?.requestNextPage();
@@ -376,7 +346,7 @@ class _ScreenMainState extends State<ScreenMain> {
                           subred = "ComedyCemetery";
                           memes.clear();
                           memesQueue.clear();
-                          if (isScrollableList) {
+                          if (GetIt.I<ThemeMeme>().isScrollableList) {
                             memeListKey.currentState?.requestNextPage();
                           } else {
                             memePageKey.currentState?.requestNextPage();
@@ -411,7 +381,7 @@ class _ScreenMainState extends State<ScreenMain> {
                           subred = "terriblefacebookmemes";
                           memes.clear();
                           memesQueue.clear();
-                          if (isScrollableList) {
+                          if (GetIt.I<ThemeMeme>().isScrollableList) {
                             memeListKey.currentState?.requestNextPage();
                           } else {
                             memePageKey.currentState?.requestNextPage();
@@ -446,7 +416,7 @@ class _ScreenMainState extends State<ScreenMain> {
                           subred = "animememes";
                           memes.clear();
                           memesQueue.clear();
-                          if (isScrollableList) {
+                          if (GetIt.I<ThemeMeme>().isScrollableList) {
                             memeListKey.currentState?.requestNextPage();
                           } else {
                             memePageKey.currentState?.requestNextPage();
