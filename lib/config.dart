@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+
+class AppColor {
+  Color main;
+  Color accent;
+  Color selected;
+
+  AppColor(
+    this.main,
+    this.accent,
+    this.selected,
+  );
+}
+
+class BackgroundColor {
+  Color main;
+  Color shade;
+  BackgroundColor(this.main, this.shade);
+}
+
+int learn = 87;
+
+bool hasCrappyInternet = false;
+bool isScrollableList = true;
+// bool isDarkMode = false;
+// int selectedBackground = 1;
+List<BackgroundColor> backgroundColors = [
+  BackgroundColor(Colors.grey, Colors.white),
+  //TODO Change color to 1B2836
+  BackgroundColor(Color(0xff1B2836), Color(0xff003f87)),
+];
+
+// int selectedAppColor = 0;
+
+final List<AppColor> appColors = [
+  AppColor(Colors.pink, Colors.pinkAccent, Colors.pink.shade800),
+  AppColor(Colors.purple, Colors.purpleAccent, Colors.purple.shade800),
+  AppColor(Colors.amber, Colors.amberAccent, Colors.amber.shade800),
+  AppColor(Colors.indigo, Colors.indigoAccent, Colors.indigo.shade800),
+  AppColor(Colors.teal, Colors.tealAccent, Colors.teal.shade800),
+  AppColor(Colors.red, Colors.redAccent, Colors.red.shade800),
+];
