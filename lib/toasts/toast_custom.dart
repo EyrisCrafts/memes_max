@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:memes_max/config.dart';
-import 'package:memes_max/models/themeMeme.dart';
+import 'package:memes_max/models/theme_meme.dart';
 import 'package:provider/provider.dart';
 
 class ToastCustom extends StatelessWidget {

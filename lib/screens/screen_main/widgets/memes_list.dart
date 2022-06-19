@@ -11,7 +11,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes_max/config.dart';
-import 'package:memes_max/models/themeMeme.dart';
+import 'package:memes_max/models/last_meme.dart';
+import 'package:memes_max/models/theme_meme.dart';
 import 'package:memes_max/sheets/sheet_settings.dart';
 import 'package:memes_max/sheets/sheet_meme_options.dart';
 import 'package:memes_max/submission.dart';
@@ -22,8 +23,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import 'models/last_meme.dart';
 
 class MemeList extends StatefulWidget {
   final String currentSub;
@@ -41,7 +40,6 @@ class MemeList extends StatefulWidget {
 String subred = "memes";
 List<Meme> memes = [];
 Queue memesQueue = Queue();
-// GlobalKey myKey = GlobalKey();
 
 class MemeListState extends State<MemeList> {
   final StreamController<List<Meme>> _streamController = StreamController();
@@ -51,13 +49,9 @@ class MemeListState extends State<MemeList> {
   late bool _isLoading;
   late ScrollController scrollController;
 
-  // late FToast fToast;
   @override
   void initState() {
-    log("initstate");
     _isLoading = true;
-    // fToast = FToast();
-    // fToast.init(context);
 
     firstReq = requestNextPage();
     super.initState();
@@ -107,9 +101,7 @@ class MemeListState extends State<MemeList> {
                     shrinkWrap: true,
                     controller: scrollController,
                     itemBuilder: (context, index) {
-                      if (memes.first != null &&
-                          (memes.first.getHeight == null ||
-                              memes.first.getHeight == "")) {
+                      if ((memes.first.getHeight == "")) {
                         log("Loading empty box");
                         memes.removeAt(0);
                         return const SizedBox(
@@ -238,9 +230,9 @@ class MemeListState extends State<MemeList> {
                         backgroundColor: Colors.transparent,
                       );
                     })
-                  : SizedBox()),
+                  : const SizedBox()),
           Positioned(
-              child: _isLoading && memes.length == 0
+              child: _isLoading && memes.isEmpty
                   ? Container(
                       width: size.width,
                       alignment: Alignment.center,
@@ -253,7 +245,7 @@ class MemeListState extends State<MemeList> {
                                 color: appColors[val.selectedAppColor].main));
                       }),
                     )
-                  : SizedBox())
+                  : const SizedBox())
         ],
       ),
     );
@@ -377,10 +369,10 @@ class MemeListState extends State<MemeList> {
     if (!_isRequesting) {
       _isRequesting = true;
 
-      if (memesQueue.length != 0) {
+      if (memesQueue.isNotEmpty) {
         int i = 0;
 
-        while (memesQueue.length != 0) {
+        while (memesQueue.isNotEmpty) {
           if (i == 5) break;
           memes.add(memesQueue.removeFirst());
           i++;
@@ -392,7 +384,7 @@ class MemeListState extends State<MemeList> {
         _streamController.add(memes);
         _isRequesting = false;
 
-        if (_isLoading || _isLoading == null) {
+        if (_isLoading) {
           setState(() {
             _isLoading = false;
           });

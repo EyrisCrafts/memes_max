@@ -7,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes_max/config.dart';
-import 'package:memes_max/models/themeMeme.dart';
+import 'package:memes_max/models/theme_meme.dart';
 import 'package:memes_max/submission.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +15,8 @@ import 'package:share/share.dart';
 import 'dart:ui' as ui;
 
 class FavoritesScreen extends StatefulWidget {
+  const FavoritesScreen({Key? key}) : super(key: key);
+
   @override
   _FavoritesScreenState createState() => _FavoritesScreenState();
 }
@@ -94,7 +96,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         );
                       }),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 40,
                     )
                   ],

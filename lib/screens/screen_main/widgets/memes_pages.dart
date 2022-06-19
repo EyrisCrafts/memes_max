@@ -11,7 +11,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes_max/config.dart';
-import 'package:memes_max/models/themeMeme.dart';
+import 'package:memes_max/models/last_meme.dart';
+import 'package:memes_max/models/theme_meme.dart';
 import 'package:memes_max/submission.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +23,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../memes.dart';
-import '../models/last_meme.dart';
+import 'memes_list.dart';
 
 class MemePages extends StatefulWidget {
   final String currentSub;

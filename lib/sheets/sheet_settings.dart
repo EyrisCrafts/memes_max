@@ -3,8 +3,8 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes_max/config.dart';
-import 'package:memes_max/models/themeMeme.dart';
-import 'package:memes_max/widgets/button_choice.dart';
+import 'package:memes_max/models/theme_meme.dart';
+import 'package:memes_max/sheets/widgets/button_choice.dart';
 import 'package:provider/provider.dart';
 
 class SheetSettings extends StatelessWidget {

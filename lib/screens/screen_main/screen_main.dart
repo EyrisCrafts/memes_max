@@ -4,18 +4,18 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes_max/config.dart';
-import 'package:memes_max/favorites.dart';
-import 'package:memes_max/memes.dart';
-import 'package:memes_max/models/themeMeme.dart';
+import 'package:memes_max/screens/screen_favorite/screen_favorites.dart';
+import 'package:memes_max/screens/screen_main/widgets/memes_list.dart';
+import 'package:memes_max/screens/screen_main/widgets/memes_pages.dart';
+import 'package:memes_max/models/theme_meme.dart';
 import 'package:memes_max/sheets/sheet_settings.dart';
 import 'package:memes_max/submission.dart';
-import 'package:memes_max/widgets/button_choice.dart';
-import 'package:memes_max/widgets/memes_pages.dart';
+import 'package:memes_max/sheets/widgets/button_choice.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/last_meme.dart';
+import '../../models/last_meme.dart';
 
 class ScreenMain extends StatefulWidget {
   const ScreenMain({Key? key}) : super(key: key);

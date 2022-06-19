@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:memes_max/models/themeMeme.dart';
+import 'package:memes_max/models/theme_meme.dart';
 import 'package:provider/provider.dart';
 
 import '../config.dart';

@@ -4,19 +4,18 @@ import 'package:draw/draw.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import 'package:memes_max/favorites.dart';
-import 'package:memes_max/models/themeMeme.dart';
-import 'package:memes_max/screens/screen_main.dart';
+import 'package:memes_max/screens/screen_favorite/screen_favorites.dart';
+import 'package:memes_max/models/theme_meme.dart';
+import 'package:memes_max/screens/screen_main/screen_main.dart';
 import 'package:memes_max/service_locator.dart';
 import 'package:memes_max/submission.dart';
-import 'package:memes_max/widgets/button_choice.dart';
-import 'package:memes_max/widgets/memes_pages.dart';
+import 'package:memes_max/sheets/widgets/button_choice.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config.dart';
-import 'memes.dart';
 import 'models/last_meme.dart';
+import 'screens/screen_main/widgets/memes_list.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
