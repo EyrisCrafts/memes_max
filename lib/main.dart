@@ -35,30 +35,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  void initState() {
-    super.initState();
-    // loadingPreferences = loadPreferences();
-  }
-
-  List stuff = [];
-  late Future loadingPreferences;
-
-  // loadPreferences() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  //   String lstMemeJSon = prefs.getString(subred) ?? '';
-  //   if (lstMemeJSon.isEmpty) return;
-  //   LastMeme lastMeme = LastMeme.fromJson(lstMemeJSon);
-  //   if (lastMeme != null) {
-  //     if (DateTime.now().difference(lastMeme.lastAccessed).inHours > 6) {
-  //       prefs.setString(subred, "");
-  //     } else {
-  //       memes.add(Meme(id: lastMeme.lastID, url: ''));
-  //     }
-  //   }
-  // }
-
-  @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // status bar color
@@ -77,11 +53,6 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(splashFactory: InkRipple.splashFactory),
         home: const ScreenMain(),
-        // home: FutureBuilder(
-        //   future: loadingPreferences,
-        //   builder: (context, snapshot) {
-        //     return const ScreenMain();
-        //   },
       ),
     );
   }

@@ -25,6 +25,12 @@ class ThemeMeme extends ChangeNotifier {
     fToast.init(context);
   }
 
+  void updateLearning() {
+    learn++;
+    notifyListeners();
+    saveToPrefs();
+  }
+
   Future<void> loadFromPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     learn = prefs.getInt('learn') ?? 0;

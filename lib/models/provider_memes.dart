@@ -21,7 +21,6 @@ class ProviderMemes extends ChangeNotifier {
   String subreddit = "memes";
   List<Meme> memes = [];
   String? lastMeme;
-  Queue memesQueue = Queue();
 
   Future<void> setupReddit() async {
     reddit = await Reddit.createReadOnlyInstance(
@@ -79,7 +78,6 @@ class ProviderMemes extends ChangeNotifier {
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
 
     Uint8List pngBytes = byteData!.buffer.asUint8List();
-    // String bs64 = base64Encode(pngBytes);
 
     getApplicationDocumentsDirectory().then((directory) {
       File imageFile = File("${directory.path}/temp.png");
@@ -126,71 +124,6 @@ class ProviderMemes extends ChangeNotifier {
       print("Error occurred");
       GetIt.I<ThemeMeme>().showToast(Icons.error, "Error Loading memes");
     }
-
-    // if (!isRequesting) {
-    //   return;
-    //   if (memes.isEmpty) {
-    //     reddit
-    //         .subreddit(subreddit)
-    //         .hot(limit: 30, after: lastMeme)
-    //         .toList()
-    //         .then((value) {
-    //       List<Meme> newList = value
-    //           .map((e) => json.decode(e.toString()))
-    //           .toList()
-    //           .where((element) => imageFilter(element))
-    //           .map((e) => Meme(
-    //               imageGlobal: GlobalKey(),
-    //               id: e['name'],
-    //               url: e['url'],
-    //               height:
-    //                   e['preview']['images'][0]['source']['height'].toString(),
-    //               width:
-    //                   e['preview']['images'][0]['source']['width'].toString()))
-    //           .toList();
-    //       log("First time: newList: ${newList.length}");
-    //       memes.addAll(newList.take(5).toList());
-    //       saveLastID();
-
-    //       memesQueue.addAll(newList.skip(5));
-    //       _streamController.add(memes);
-    //       isRequesting = false;
-    //       isLoading = false;
-    //       notifyListeners();
-    //     });
-    //   } else {
-    //     log("SUCESS LOADING FROM LASTID ${memes.last.getId}");
-    //     widget.reddit
-    //         .subreddit(subred)
-    //         .hot(limit: 30, after: memes.last.getId)
-    //         .toList()
-    //         .then((value) {
-    //       // log(json.decode(value.toString())[0].toString());
-
-    //       List<Meme> newList = value
-    //           .map((e) => json.decode(e.toString()))
-    //           .toList()
-    //           .where((element) => imageFilter(element))
-    //           .map((e) => Meme(
-    //               imageGlobal: GlobalKey(),
-    //               id: e['name'],
-    //               url: e['url'],
-    //               height:
-    //                   e['preview']['images'][0]['source']['height'].toString(),
-    //               width:
-    //                   e['preview']['images'][0]['source']['width'].toString()))
-    //           .toList();
-    //       memes.addAll(newList.take(5).toList());
-    //       saveLastID();
-
-    //       memesQueue.addAll(newList.skip(5));
-    //       _streamController.add(memes);
-    //       isRequesting = false;
-    //       isLoading = false;
-    //       notifyListeners();
-    //     });
-    // }
-    // }
   }
 
   bool imageFilter(dynamic element) {

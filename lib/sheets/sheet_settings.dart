@@ -3,9 +3,11 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes_max/config.dart';
+import 'package:memes_max/models/provider_memes.dart';
 import 'package:memes_max/models/theme_meme.dart';
 import 'package:memes_max/sheets/widgets/button_choice.dart';
 import 'package:provider/provider.dart';
+import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
 class SheetSettings extends StatelessWidget {
   const SheetSettings({Key? key}) : super(key: key);
@@ -16,28 +18,24 @@ class SheetSettings extends StatelessWidget {
     return Consumer<ThemeMeme>(
         child: Column(
           children: [
-            Stack(
-              children: [
-                // GradientCircularProgressIndicator(
-                //   gradientColors: [
-                //     appColors[selectedAppColor].accent,
-                //     appColors[selectedAppColor].main,
-                //     appColors[selectedAppColor].selected
-                //   ],
-                //   radius: 40,
-                //   strokeWidth: 8.0,
-                //   backgroundColor: Colors.grey[350],
-                //   value: learn / 100,
-                // ),
-
-                Container(
-                  height: 80,
-                  width: 80,
-                  alignment: Alignment.center,
-                  child: const Text("Learning",
-                      style: TextStyle(color: Colors.grey, fontSize: 13)),
-                )
-              ],
+            SizedBox(
+              height: 80,
+              width: 80,
+              child: Consumer<ThemeMeme>(builder: (context, theme, _) {
+                return SleekCircularSlider(
+                  innerWidget: (a) => const SizedBox(),
+                  appearance: CircularSliderAppearance(
+                      customColors: CustomSliderColors(
+                          trackColor: Colors.transparent,
+                          progressBarColor: Colors.transparent,
+                          dotColor: Colors.transparent,
+                          trackColors: appColors.map((e) => e.main).toList()),
+                      customWidths: CustomSliderWidths(progressBarWidth: 10)),
+                  min: 0,
+                  max: 100,
+                  initialValue: theme.learn.toDouble(),
+                );
+              }),
             ),
             Row(
                 mainAxisAlignment: MainAxisAlignment.center,
