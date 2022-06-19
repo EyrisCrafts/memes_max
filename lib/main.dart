@@ -4,6 +4,7 @@ import 'package:draw/draw.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+import 'package:memes_max/models/provider_game.dart';
 import 'package:memes_max/screens/screen_favorite/screen_favorites.dart';
 import 'package:memes_max/models/theme_meme.dart';
 import 'package:memes_max/screens/screen_main/screen_main.dart';
@@ -68,7 +69,8 @@ class _MyAppState extends State<MyApp> {
     ]);
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => GetIt.I<ThemeMeme>())
+        ChangeNotifierProvider(create: (context) => GetIt.I<ThemeMeme>()),
+        ChangeNotifierProvider(create: (context) => GetIt.I<ProviderGame>())
       ],
       child: MaterialApp(
           title: "Memax",

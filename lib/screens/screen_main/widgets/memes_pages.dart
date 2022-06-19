@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart';
 import 'package:memes_max/config.dart';
 import 'package:memes_max/models/last_meme.dart';
 import 'package:memes_max/models/theme_meme.dart';
+import 'package:memes_max/sheets/sheet_meme_options.dart';
 import 'package:memes_max/submission.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
@@ -44,14 +45,11 @@ class MemePagesState extends State<MemePages> {
   late bool _isLoading;
   late PreloadPageController _pageController;
 
-  late FToast fToast;
   @override
   void initState() {
     _streamController = StreamController();
     _isRequesting = false;
     _isLoading = true;
-    fToast = FToast();
-    fToast.init(context);
     firstReq = requestNextPage();
     _pageController = PreloadPageController();
 
@@ -65,242 +63,107 @@ class MemePagesState extends State<MemePages> {
         stream: _streamController.stream,
         builder: (context, snapshot) {
           if (snapshot.hasError)
-            return Center(
+            return const Center(
               child: Text("Error Ocurred"),
             );
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return SizedBox();
+            return const SizedBox();
           }
-          return Container(
-            child: PreloadPageView.builder(
-                itemCount: memes.length,
-                preloadPagesCount: 5,
-                controller: _pageController,
-                onPageChanged: (value) {
-                  if (value == memes.length - 2) {
-                    requestNextPage();
-                  }
-                },
-                itemBuilder: (context, index) {
-                  if (memes.first != null &&
-                      (memes.first.getHeight == null ||
-                          memes.first.getHeight == "")) {
-                    log("Loading empty box");
-                    memes.removeAt(0);
-                    return SizedBox(
-                      height: 5,
-                    );
-                  }
-                  double imageAspect = double.parse(memes[index].width) /
-                      double.parse(memes[index].height);
+          return PreloadPageView.builder(
+              itemCount: memes.length,
+              preloadPagesCount: 5,
+              controller: _pageController,
+              onPageChanged: (value) {
+                if (value == memes.length - 2) {
+                  requestNextPage();
+                }
+              },
+              itemBuilder: (context, index) {
+                if ((memes.first.getHeight == "")) {
+                  log("Loading empty box");
+                  memes.removeAt(0);
+                  return const SizedBox(
+                    height: 5,
+                  );
+                }
+                double imageAspect = double.parse(memes[index].width) /
+                    double.parse(memes[index].height);
 
-                  double screenWidth = size.width;
-                  double widgetHeight = screenWidth / imageAspect;
+                double screenWidth = size.width;
+                double widgetHeight = screenWidth / imageAspect;
 
-                  return Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    width: size.width,
-                    height: widgetHeight,
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: RepaintBoundary(
-                            key: memes[index].imageGlobal,
-                            child: CachedNetworkImage(
-                              imageUrl: memes[index].getUrl,
-                              progressIndicatorBuilder:
-                                  (context, url, progress) => Center(
-                                child: Consumer<ThemeMeme>(
-                                    builder: (context, val, _) {
-                                  return CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          appColors[val.selectedAppColor].main),
-                                      value: progress.progress);
-                                }),
-                              ),
+                return Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  width: size.width,
+                  height: widgetHeight,
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: RepaintBoundary(
+                          key: memes[index].imageGlobal,
+                          child: CachedNetworkImage(
+                            imageUrl: memes[index].getUrl,
+                            progressIndicatorBuilder:
+                                (context, url, progress) => Center(
+                              child: Consumer<ThemeMeme>(
+                                  builder: (context, val, _) {
+                                return CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        appColors[val.selectedAppColor].main),
+                                    value: progress.progress);
+                              }),
                             ),
                           ),
                         ),
-                        Consumer<ThemeMeme>(
-                          builder: (context, value, child) => value.isDarkMode
-                              ? Positioned.fill(
-                                  child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.5)),
-                                ))
-                              : Container(),
-                        ),
-                        // isDarkMode
-                        //     ? Positioned.fill(
-                        //         child: Container(
-                        //         decoration: BoxDecoration(
-                        //             color: Colors.black.withOpacity(0.5)),
-                        //       ))
-                        //     : Container(),
-                        Positioned.fill(
-                            child: Material(
-                          color: Colors.transparent,
-                          child:
-                              Consumer<ThemeMeme>(builder: (context, val, _) {
-                            return InkWell(
-                              // onTap: () =>
-                              //     _animateToIndex(index, s ize),
-                              onLongPress: () => onTapBottomSheet(index, size),
-                              highlightColor: Colors.transparent,
-                              splashColor: appColors[val.selectedAppColor]
-                                  .main
-                                  .withOpacity(0.3),
-                            );
-                          }),
-                        ))
-                      ],
-                    ),
-                  );
-                }),
-          );
+                      ),
+                      Consumer<ThemeMeme>(
+                        builder: (context, value, child) => value.isDarkMode
+                            ? Positioned.fill(
+                                child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.5)),
+                              ))
+                            : Container(),
+                      ),
+                      // isDarkMode
+                      //     ? Positioned.fill(
+                      //         child: Container(
+                      //         decoration: BoxDecoration(
+                      //             color: Colors.black.withOpacity(0.5)),
+                      //       ))
+                      //     : Container(),
+                      Positioned.fill(
+                          child: Material(
+                        color: Colors.transparent,
+                        child: Consumer<ThemeMeme>(builder: (context, val, _) {
+                          return InkWell(
+                            // onTap: () =>
+                            //     _animateToIndex(index, s ize),
+                            onLongPress: () => onTapBottomSheet(index, size),
+                            highlightColor: Colors.transparent,
+                            splashColor: appColors[val.selectedAppColor]
+                                .main
+                                .withOpacity(0.3),
+                          );
+                        }),
+                      ))
+                    ],
+                  ),
+                );
+              });
         });
   }
 
   onTapBottomSheet(int index, Size size) {
     showModalBottomSheet(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
         builder: (context) {
-          return Consumer<ThemeMeme>(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: size.width * 0.8,
-                    child: Consumer<ThemeMeme>(builder: (context, val, _) {
-                      return MaterialButton(
-                        color: appColors[val.selectedAppColor].main,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        height: 40,
-                        splashColor: appColors[val.selectedAppColor].accent,
-                        onPressed: () {
-                          GetIt.I<ThemeMeme>().learn++;
-                          addScore();
-                          Navigator.pop(context);
-                          _showToast(
-                            size,
-                            "Learned Preference",
-                            Icon(Icons.thumb_up, color: Colors.white),
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("See More of This",
-                                style: TextStyle(color: Colors.white)),
-                            Icon(Icons.thumb_up, color: Colors.white)
-                          ],
-                        ),
-                      );
-                    }),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    width: size.width * 0.8,
-                    child: Consumer<ThemeMeme>(builder: (context, val, _) {
-                      return MaterialButton(
-                        color: appColors[val.selectedAppColor].main,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        height: 40,
-                        splashColor: appColors[val.selectedAppColor].accent,
-                        onPressed: () {
-                          GetIt.I<ThemeMeme>().learn++;
-                          addScore();
-                          Navigator.pop(context);
-                          _showToast(
-                            size,
-                            "Learned Preference",
-                            Icon(Icons.thumb_up, color: Colors.white),
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text("See Less of This",
-                                style: TextStyle(color: Colors.white)),
-                            Icon(Icons.thumb_down, color: Colors.white)
-                          ],
-                        ),
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: size.width * 0.8,
-                    child: Consumer<ThemeMeme>(builder: (context, val, _) {
-                      return MaterialButton(
-                        color: appColors[val.selectedAppColor].main,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        height: 40,
-                        splashColor: appColors[val.selectedAppColor].accent,
-                        onPressed: () {
-                          saveImage(size, index);
-                          Navigator.pop(context);
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text("Save to Favorites",
-                                style: TextStyle(color: Colors.white)),
-                            Icon(Icons.favorite, color: Colors.white)
-                          ],
-                        ),
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: size.width * 0.8,
-                    child: Consumer<ThemeMeme>(builder: (context, val, _) {
-                      return MaterialButton(
-                        color: appColors[val.selectedAppColor].main,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        height: 40,
-                        splashColor: appColors[val.selectedAppColor].accent,
-                        onPressed: () {
-                          shareImage(index);
-                          Navigator.pop(context);
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text("Share this Meme",
-                                style: TextStyle(color: Colors.white)),
-                            Icon(Icons.share_rounded, color: Colors.white)
-                          ],
-                        ),
-                      );
-                    }),
-                  )
-                ],
-              ),
-              builder: (context, val, child) {
-                return Container(
-                    decoration: BoxDecoration(
-                        color: backgroundColors[val.selectedBackground]
-                            .main
-                            .withAlpha(245),
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20))),
-                    width: size.width,
-                    height: 240,
-                    child: child);
-              });
+          return const SheetsMemeOptions();
         });
   }
 
@@ -330,11 +193,7 @@ class MemePagesState extends State<MemePages> {
     getExternalStorageDirectory().then((directory) {
       File imageFile = File("${directory?.path}/${memes[index].getId}.png");
       imageFile.writeAsBytesSync(pngBytes);
-      _showToast(
-        size,
-        "Saved Image",
-        Icon(Icons.thumb_up, color: Colors.white),
-      );
+      GetIt.I<ThemeMeme>().showToast(Icons.thumb_up, "Saved Image");
     });
   }
 
@@ -370,47 +229,6 @@ class MemePagesState extends State<MemePages> {
   void dispose() {
     _streamController.close();
     super.dispose();
-  }
-
-  _showToast(Size size, String message, Icon icon) {
-    fToast.showToast(
-        child: Container(
-          height: 45,
-          width: size.width * 0.8,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          child: Row(
-            children: [
-              Consumer<ThemeMeme>(builder: (context, val, _) {
-                return Container(
-                  alignment: Alignment.center,
-                  width: size.width * 0.15,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        bottomLeft: Radius.circular(10)),
-                    color: appColors[val.selectedAppColor].main,
-                  ),
-                  child: icon,
-                );
-              }),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Consumer<ThemeMeme>(builder: (context, val, _) {
-                    return Text(message,
-                        style: TextStyle(
-                            color: appColors[val.selectedAppColor].main));
-                  }),
-                ),
-              )
-            ],
-          ),
-        ),
-        gravity: ToastGravity.BOTTOM,
-        toastDuration: Duration(seconds: 2));
   }
 
   requestNextPage() async {
