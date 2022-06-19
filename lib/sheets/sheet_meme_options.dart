@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:memes_max/models/provider_memes.dart';
 import 'package:memes_max/models/theme_meme.dart';
 import 'package:provider/provider.dart';
 
 import '../config.dart';
 
 class SheetsMemeOptions extends StatelessWidget {
-  const SheetsMemeOptions({Key? key}) : super(key: key);
-
+  const SheetsMemeOptions({Key? key, required this.index}) : super(key: key);
+  final int index;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -31,11 +32,6 @@ class SheetsMemeOptions extends StatelessWidget {
                 Navigator.pop(context);
                 GetIt.I<ThemeMeme>()
                     .showToast(Icons.thumb_up, "Learned Preference");
-                // _showToast(
-                //   size,
-                //   "Learned Preference",
-                //   Icon(Icons.thumb_up, color: Colors.white),
-                // );
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,7 +43,7 @@ class SheetsMemeOptions extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           SizedBox(
             width: size.width * 0.8,
             child: MaterialButton(
@@ -83,7 +79,7 @@ class SheetsMemeOptions extends StatelessWidget {
               height: 40,
               splashColor: appColors[val.selectedAppColor].accent,
               onPressed: () {
-                // saveImage(size, index);
+                GetIt.I<ProviderMemes>().saveImage(index);
                 Navigator.pop(context);
               },
               child: Row(
@@ -106,6 +102,7 @@ class SheetsMemeOptions extends StatelessWidget {
               height: 40,
               splashColor: appColors[val.selectedAppColor].accent,
               onPressed: () {
+                GetIt.I<ProviderMemes>().shareMeme(index);
                 // shareImage(index);
                 Navigator.pop(context);
               },

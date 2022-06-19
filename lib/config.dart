@@ -18,6 +18,15 @@ class BackgroundColor {
   BackgroundColor(this.main, this.shade);
 }
 
+List<String> memeCategories = const [
+  "memes",
+  "dankmemes",
+  "AdviceAnimals",
+  "ComedyCemetery",
+  "terriblefacebookmemes",
+  "animememes"
+];
+
 List<BackgroundColor> backgroundColors = [
   BackgroundColor(Colors.grey, Colors.white),
   BackgroundColor(const Color(0xff1B2836), const Color(0xff003f87)),

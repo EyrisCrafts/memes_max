@@ -4,7 +4,7 @@ import 'package:draw/draw.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import 'package:memes_max/models/provider_game.dart';
+import 'package:memes_max/models/provider_memes.dart';
 import 'package:memes_max/screens/screen_favorite/screen_favorites.dart';
 import 'package:memes_max/models/theme_meme.dart';
 import 'package:memes_max/screens/screen_main/screen_main.dart';
@@ -37,26 +37,26 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    loadingPreferences = loadPreferences();
+    // loadingPreferences = loadPreferences();
   }
 
   List stuff = [];
   late Future loadingPreferences;
 
-  loadPreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  // loadPreferences() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String lstMemeJSon = prefs.getString(subred) ?? '';
-    if (lstMemeJSon.isEmpty) return;
-    LastMeme lastMeme = LastMeme.fromJson(lstMemeJSon);
-    if (lastMeme != null) {
-      if (DateTime.now().difference(lastMeme.lastAccessed).inHours > 6) {
-        prefs.setString(subred, "");
-      } else {
-        memes.add(Meme(id: lastMeme.lastID, url: ''));
-      }
-    }
-  }
+  //   String lstMemeJSon = prefs.getString(subred) ?? '';
+  //   if (lstMemeJSon.isEmpty) return;
+  //   LastMeme lastMeme = LastMeme.fromJson(lstMemeJSon);
+  //   if (lastMeme != null) {
+  //     if (DateTime.now().difference(lastMeme.lastAccessed).inHours > 6) {
+  //       prefs.setString(subred, "");
+  //     } else {
+  //       memes.add(Meme(id: lastMeme.lastID, url: ''));
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -70,18 +70,19 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => GetIt.I<ThemeMeme>()),
-        ChangeNotifierProvider(create: (context) => GetIt.I<ProviderGame>())
+        ChangeNotifierProvider(create: (context) => GetIt.I<ProviderMemes>())
       ],
       child: MaterialApp(
-          title: "Memax",
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(splashFactory: InkRipple.splashFactory),
-          home: FutureBuilder(
-            future: loadingPreferences,
-            builder: (context, snapshot) {
-              return const ScreenMain();
-            },
-          )),
+        title: "Memax",
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(splashFactory: InkRipple.splashFactory),
+        home: const ScreenMain(),
+        // home: FutureBuilder(
+        //   future: loadingPreferences,
+        //   builder: (context, snapshot) {
+        //     return const ScreenMain();
+        //   },
+      ),
     );
   }
 }
