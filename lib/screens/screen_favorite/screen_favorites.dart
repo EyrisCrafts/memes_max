@@ -33,24 +33,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   Future<List<MemeFile>> loadImagePaths() async {
-    log("Looking for images");
     Directory? directory = await getExternalStorageDirectory();
     if (directory == null) return [];
     List<FileSystemEntity> files = await directory.list().toList();
     return files
         .map((FileSystemEntity e) => MemeFile(path: e.path, key: GlobalKey()))
         .toList();
-
-    // .then((directory) {
-    //   directory.list();
-    //   File imageFile = File("${directory.path}/temp.png");
-
-    //   imageFile.writeAsBytesSync(pngBytes);
-    //   Share.shareFiles(
-    //     ['${directory.path}/temp.png'],
-    //     text: 'Checkout this meme',
-    //   );
-    // });
   }
 
   @override

@@ -212,69 +212,6 @@ class MemeListState extends State<MemeList> {
         });
   }
 
-  void addScore() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int learnScore = prefs.getInt('learn') ?? 0;
-    prefs.setInt('learn', learnScore + 1);
-  }
-
-  void saveImage(Size size, int index) async {
-    if (await Permission.storage.isDenied) {
-      PermissionStatus status = await Permission.storage.request();
-      if (status.isDenied) return;
-    }
-    RenderRepaintBoundary? boundary = GetIt.I<ProviderMemes>()
-        .memes[index]
-        .imageGlobal
-        ?.currentContext
-        ?.findRenderObject() as RenderRepaintBoundary?;
-    if (boundary == null) return;
-    ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    Uint8List pngBytes = byteData!.buffer.asUint8List();
-    // String bs64 = base64Encode(pngBytes);
-
-    getExternalStorageDirectory().then((directory) {
-      File imageFile = File(
-          "${directory!.path}/${GetIt.I<ProviderMemes>().memes[index].getId}.png");
-      imageFile.writeAsBytesSync(pngBytes);
-      _showToast(
-        size,
-        "Saved Image",
-        Icons.thumb_up,
-      );
-    });
-  }
-
-  void shareImage(int index) async {
-    if (await Permission.storage.isDenied) {
-      PermissionStatus status = await Permission.storage.request();
-      if (status.isDenied) return;
-    }
-    RenderRepaintBoundary? boundary = GetIt.I<ProviderMemes>()
-        .memes[index]
-        .imageGlobal
-        ?.currentContext
-        ?.findRenderObject() as RenderRepaintBoundary?;
-    if (boundary == null) return;
-
-    ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-
-    Uint8List pngBytes = byteData!.buffer.asUint8List();
-    // String bs64 = base64Encode(pngBytes);
-
-    getApplicationDocumentsDirectory().then((directory) {
-      File imageFile = File("${directory.path}/temp.png");
-      imageFile.writeAsBytesSync(pngBytes);
-      Share.shareFiles(
-        ['${directory.path}/temp.png'],
-        text: 'Checkout this meme',
-      );
-    });
-  }
-
   double calcWidgetHeight(Meme meme, totalSize) {
     double imageAspect = double.parse(meme.width) / double.parse(meme.height);
     double screenWidth = totalSize.width - 20;
@@ -315,16 +252,5 @@ class MemeListState extends State<MemeList> {
         prefs.setString(GetIt.I<ProviderMemes>().subreddit, lastMeme.toJson());
       }
     });
-  }
-
-  bool imageFilter(dynamic element) {
-    bool hasCrappyInternet = GetIt.I<ThemeMeme>().hasCrappyInternet;
-    return element['url'].toString().contains("i.redd") &&
-        !element['url'].toString().contains(".gif") &&
-        ((hasCrappyInternet &&
-                (element['preview']['images'][0]['source']['height'] *
-                        element['preview']['images'][0]['source']['width'] <
-                    2250000)) ||
-            !hasCrappyInternet);
   }
 }

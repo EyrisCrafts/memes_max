@@ -40,89 +40,19 @@ class SheetSettings extends StatelessWidget {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                    splashColor: Colors.pinkAccent,
-                    icon: const Icon(
-                      Icons.circle,
-                      color: Colors.pink,
-                    ),
-                    onPressed: () {
-                      // selectedAppColor = 0;
-                      GetIt.I<ThemeMeme>().updateAppColor(0);
-                      // saveSelectedAccent(selectedAppColor);
-                      // setState(() {});
-                      // modalSetState(() {});
-                    }),
-                IconButton(
-                    splashColor: Colors.purpleAccent,
-                    icon: const Icon(
-                      Icons.circle,
-                      color: Colors.purple,
-                    ),
-                    onPressed: () {
-                      // selectedAppColor = 1;
-                      GetIt.I<ThemeMeme>().updateAppColor(1);
-                      // saveSelectedAccent(selectedAppColor);
-                      // setState(() {});
-                      // modalSetState(() {});
-                    }),
-                IconButton(
-                    splashColor: Colors.amberAccent,
-                    icon: const Icon(
-                      Icons.circle,
-                      color: Colors.amber,
-                    ),
-                    onPressed: () {
-                      // selectedAppColor = 2;
-                      GetIt.I<ThemeMeme>().updateAppColor(2);
-                      // saveSelectedAccent(selectedAppColor);
-                      // setState(() {});
-                      // modalSetState(() {});
-                    }),
-                IconButton(
-                    splashColor: Colors.indigoAccent,
-                    icon: const Icon(
-                      Icons.circle,
-                      color: Colors.indigo,
-                    ),
-                    onPressed: () {
-                      // selectedAppColor = 3;
-                      GetIt.I<ThemeMeme>().updateAppColor(3);
-                      // saveSelectedAccent(selectedAppColor);
-                      // setState(() {});
-                      // modalSetState(() {});
-                    }),
-                IconButton(
-                    splashColor: Colors.tealAccent,
-                    icon: const Icon(
-                      Icons.circle,
-                      color: Colors.teal,
-                    ),
-                    onPressed: () {
-                      // selectedAppColor = 4;
-                      GetIt.I<ThemeMeme>().updateAppColor(4);
-                      // saveSelectedAccent(selectedAppColor);
-                      // setState(() {});
-                      // modalSetState(() {});
-                    }),
-                IconButton(
-                    splashColor: Colors.redAccent,
-                    icon: const Icon(
-                      Icons.circle,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                      // selectedAppColor = 5;
-                      GetIt.I<ThemeMeme>().updateAppColor(5);
-
-                      // saveSelectedAccent(selectedAppColor);
-                      // setState(() {});
-                      // modalSetState(() {});
-                    }),
-              ],
-            ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  appColors.length,
+                  (index) => IconButton(
+                      splashColor: appColors[index].accent,
+                      icon: Icon(
+                        Icons.circle,
+                        color: appColors[index].main,
+                      ),
+                      onPressed: () {
+                        GetIt.I<ThemeMeme>().updateAppColor(index);
+                      }),
+                )),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -132,11 +62,7 @@ class SheetSettings extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     onPressed: () {
-                      // selectedBackground = 0;
                       GetIt.I<ThemeMeme>().updateBackgroundColor(0);
-                      // saveSelectedBackground(selectedBackground);
-                      // setState(() {});
-                      // modalSetState(() {});
                     }),
                 IconButton(
                     icon: Icon(
@@ -144,11 +70,7 @@ class SheetSettings extends StatelessWidget {
                       color: backgroundColors[1].main,
                     ),
                     onPressed: () {
-                      // selectedBackground = 1;
                       GetIt.I<ThemeMeme>().updateBackgroundColor(1);
-                      // saveSelectedBackground(selectedBackground);
-                      // modalSetState(() {});
-                      // setState(() {});
                     }),
               ],
             ),
@@ -161,11 +83,6 @@ class SheetSettings extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     GetIt.I<ThemeMeme>().updateDarkMode();
-                    return;
-                    // isDarkMode = !isDarkMode;
-                    // saveDarkPreferences(isDarkMode);
-                    // setState(() {});
-                    // modalSetState(() {});
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -205,11 +122,7 @@ class SheetSettings extends StatelessWidget {
                     colorMain: appColors[val.selectedAppColor].main,
                     colorAccent: appColors[val.selectedAppColor].accent,
                     onPress: () {
-                      // isScrollableList = !isScrollableList;
                       GetIt.I<ThemeMeme>().updateIsScrollableList(true);
-                      // saveScrollablePreferences(isScrollableList);
-                      // setState(() {});
-                      // modalSetState(() {});
                     },
                   );
                 }),
@@ -221,11 +134,7 @@ class SheetSettings extends StatelessWidget {
                     colorMain: appColors[val.selectedAppColor].main,
                     colorAccent: appColors[val.selectedAppColor].accent,
                     onPress: () {
-                      // isScrollableList = !isScrollableList;
                       GetIt.I<ThemeMeme>().updateIsScrollableList(false);
-                      // saveScrollablePreferences(isScrollableList);
-                      // setState(() {});
-                      // modalSetState(() {});
                     },
                   );
                 }),
@@ -240,10 +149,6 @@ class SheetSettings extends StatelessWidget {
                 colorAccent: appColors[val.selectedAppColor].accent,
                 onPress: () {
                   GetIt.I<ThemeMeme>().updateCrappyInternet();
-                  // hasCrappyInternet = !hasCrappyInternet;
-                  // saveInternetPreferences(hasCrappyInternet);
-                  // setState(() {});
-                  // modalSetState(() {});
                 },
               );
             }),
