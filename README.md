@@ -1,16 +1,12 @@
-# memes_max
+# Memax - Your daily dose of Laughter
 
-A new Flutter project.
+You can download from the releases side tab or from the playstore https://play.google.com/store/apps/details?id=com.eyriscrafts.memesmax
 
-## Getting Started
+Flutter made, using a clean code architecture.
 
-This project is a starting point for a Flutter application.
+Github stars are always a welcome. 
 
-A few resources to get you started if this is your first Flutter project:
+![image](images/image2.jpeg)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
