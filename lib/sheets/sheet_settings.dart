@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes_max/config.dart';
-import 'package:memes_max/models/provider_memes.dart';
 import 'package:memes_max/models/theme_meme.dart';
 import 'package:memes_max/sheets/widgets/button_choice.dart';
 import 'package:provider/provider.dart';
@@ -25,11 +22,8 @@ class SheetSettings extends StatelessWidget {
                 return SleekCircularSlider(
                   innerWidget: (a) => const SizedBox(),
                   appearance: CircularSliderAppearance(
-                      customColors: CustomSliderColors(
-                          trackColor: Colors.transparent,
-                          progressBarColor: Colors.transparent,
-                          dotColor: Colors.transparent,
-                          trackColors: appColors.map((e) => e.main).toList()),
+                      customColors:
+                          CustomSliderColors(trackColor: Colors.transparent, progressBarColor: Colors.transparent, dotColor: Colors.transparent, trackColors: appColors.map((e) => e.main).toList()),
                       customWidths: CustomSliderWidths(progressBarWidth: 10)),
                   min: 0,
                   max: 100,
@@ -86,21 +80,13 @@ class SheetSettings extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Consumer<ThemeMeme>(builder: (context, val, _) {
-                        return Text("Dark Memes",
-                            style: TextStyle(
-                                color: val.selectedBackground == 1
-                                    ? Colors.white
-                                    : Colors.black));
+                        return Text("Dark Memes", style: TextStyle(color: val.selectedBackground == 1 ? Colors.white : Colors.black));
                       }),
                       IconButton(
                           icon: Consumer<ThemeMeme>(builder: (context, val, _) {
                             return Icon(
-                              val.isDarkMode
-                                  ? Icons.check_box
-                                  : Icons.check_box_outline_blank,
-                              color: val.selectedBackground == 1
-                                  ? Colors.white
-                                  : Colors.black,
+                              val.isDarkMode ? Icons.check_box : Icons.check_box_outline_blank,
+                              color: val.selectedBackground == 1 ? Colors.white : Colors.black,
                             );
                           }),
                           onPressed: null),
@@ -138,29 +124,24 @@ class SheetSettings extends StatelessWidget {
                 }),
               ],
             ),
-            Consumer<ThemeMeme>(builder: (context, val, _) {
-              return ChoiceButton(
-                text: "I have crappy Internet",
-                width: size.width * 0.8,
-                isActive: val.hasCrappyInternet,
-                colorMain: appColors[val.selectedAppColor].main,
-                colorAccent: appColors[val.selectedAppColor].accent,
-                onPress: () {
-                  GetIt.I<ThemeMeme>().updateCrappyInternet();
-                },
-              );
-            }),
+            // Consumer<ThemeMeme>(builder: (context, val, _) {
+            //   return ChoiceButton(
+            //     text: "I have crappy Internet",
+            //     width: size.width * 0.8,
+            //     isActive: val.hasCrappyInternet,
+            //     colorMain: appColors[val.selectedAppColor].main,
+            //     colorAccent: appColors[val.selectedAppColor].accent,
+            //     onPress: () {
+            //       GetIt.I<ThemeMeme>().updateCrappyInternet();
+            //     },
+            //   );
+            // }),
           ],
         ),
         builder: (context, val, child) {
           return Container(
               decoration: BoxDecoration(
-                  color: backgroundColors[val.selectedBackground]
-                      .main
-                      .withAlpha(245),
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20))),
+                  color: backgroundColors[val.selectedBackground].main.withAlpha(245), borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               height: 370,
               child: child);

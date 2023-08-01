@@ -28,19 +28,14 @@ class CustomAppBar extends StatelessWidget {
                   height: 40,
                   width: 40,
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: appColors[val.selectedAppColor].main,
-                      borderRadius: BorderRadius.circular(20)),
+                  decoration: BoxDecoration(color: appColors[val.selectedAppColor].main, borderRadius: BorderRadius.circular(20)),
                   child: IconButton(
                     iconSize: 20,
                     icon: const Icon(Icons.settings, color: Colors.white),
                     onPressed: () {
                       showModalBottomSheet(
                           isScrollControlled: true,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20))),
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
                           context: context,
                           builder: (context) {
                             return const SheetSettings();
@@ -49,31 +44,31 @@ class CustomAppBar extends StatelessWidget {
                   ));
             }),
           ),
-          Align(
-            alignment: Alignment.center,
-            child: Consumer<ThemeMeme>(builder: (context, val, _) {
-              return MaterialButton(
-                color: appColors[val.selectedAppColor].main,
-                height: 40,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14)),
-                onPressed: () {
-                  showModalBottomSheet(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20))),
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) => const SheetMemeCategory());
-                },
-                child: const Text(
-                  "Category",
-                  style: TextStyle(color: Colors.white),
-                ),
-              );
-            }),
-          ),
+          // Align(
+          //   alignment: Alignment.center,
+          //   child: Consumer<ThemeMeme>(builder: (context, val, _) {
+          //     return MaterialButton(
+          //       color: appColors[val.selectedAppColor].main,
+          //       height: 40,
+          //       shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.circular(14)),
+          //       onPressed: () {
+          //         showModalBottomSheet(
+          //             shape: const RoundedRectangleBorder(
+          //                 borderRadius: BorderRadius.only(
+          //                     topLeft: Radius.circular(20),
+          //                     topRight: Radius.circular(20))),
+          //             context: context,
+          //             isScrollControlled: true,
+          //             builder: (context) => const SheetMemeCategory());
+          //       },
+          //       child: const Text(
+          //         "Category",
+          //         style: TextStyle(color: Colors.white),
+          //       ),
+          //     );
+          //   }),
+          // ),
           Positioned.fill(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -83,15 +78,12 @@ class CustomAppBar extends StatelessWidget {
                     height: 40,
                     width: 40,
                     alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: appColors[val.selectedAppColor].main,
-                        borderRadius: BorderRadius.circular(20)),
+                    decoration: BoxDecoration(color: appColors[val.selectedAppColor].main, borderRadius: BorderRadius.circular(20)),
                     child: IconButton(
                         iconSize: 20,
                         icon: const Icon(Icons.share, color: Colors.white),
                         onPressed: () {
-                          Share.share(
-                              "https://play.google.com/store/apps/details?id=com.eyriscrafts.memesmax");
+                          Share.share("https://play.google.com/store/apps/details?id=com.eyriscrafts.memesmax");
                         }),
                   );
                 }),
@@ -103,17 +95,11 @@ class CustomAppBar extends StatelessWidget {
                     height: 40,
                     width: 40,
                     alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: appColors[val.selectedAppColor].main,
-                        borderRadius: BorderRadius.circular(20)),
+                    decoration: BoxDecoration(color: appColors[val.selectedAppColor].main, borderRadius: BorderRadius.circular(20)),
                     child: IconButton(
                         iconSize: 20,
                         icon: const Icon(Icons.favorite, color: Colors.white),
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const FavoritesScreen()))),
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoritesScreen()))),
                   );
                 }),
               ],

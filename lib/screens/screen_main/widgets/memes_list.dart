@@ -1,29 +1,14 @@
-import 'dart:async';
-import 'dart:collection';
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:draw/draw.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes_max/config.dart';
 import 'package:memes_max/models/last_meme.dart';
 import 'package:memes_max/models/provider_memes.dart';
 import 'package:memes_max/models/theme_meme.dart';
-import 'package:memes_max/sheets/sheet_settings.dart';
 import 'package:memes_max/sheets/sheet_meme_options.dart';
 import 'package:memes_max/submission.dart';
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
-import 'dart:ui' as ui;
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class MemeList extends StatefulWidget {
   const MemeList({
@@ -67,8 +52,7 @@ class MemeListState extends State<MemeList> {
 
   @override
   Widget build(BuildContext context) {
-    scrollController =
-        PrimaryScrollController.of(context) ?? ScrollController();
+    scrollController = PrimaryScrollController.of(context);
     Size size = MediaQuery.of(context).size;
 
     return Stack(
@@ -92,9 +76,7 @@ class MemeListState extends State<MemeList> {
                       height: 5,
                     );
                   }
-                  double imageAspect =
-                      double.parse(provMemes.memes[index].width) /
-                          double.parse(provMemes.memes[index].height);
+                  double imageAspect = double.parse(provMemes.memes[index].width) / double.parse(provMemes.memes[index].height);
 
                   double screenWidth = size.width - 20;
                   double widgetHeight = screenWidth / imageAspect;
@@ -102,11 +84,9 @@ class MemeListState extends State<MemeList> {
                   return index == provMemes.memes.length - 1
                       ? SizedBox(
                           height: 100,
-                          child: Center(child:
-                              Consumer<ThemeMeme>(builder: (context, val, _) {
+                          child: Center(child: Consumer<ThemeMeme>(builder: (context, val, _) {
                             return CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(
-                                  appColors[val.selectedAppColor].main),
+                              valueColor: AlwaysStoppedAnimation(appColors[val.selectedAppColor].main),
                             );
                           })),
                         )
@@ -115,22 +95,10 @@ class MemeListState extends State<MemeList> {
                             margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                             width: size.width - 20,
                             height: widgetHeight,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(18),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black.withOpacity(0.6),
-                                      offset: const Offset(2, 2),
-                                      spreadRadius: 3,
-                                      blurRadius: 5),
-                                  BoxShadow(
-                                      color: backgroundColors[
-                                              val.selectedBackground]
-                                          .main,
-                                      offset: const Offset(-2, -2),
-                                      spreadRadius: 2,
-                                      blurRadius: 4)
-                                ]),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), boxShadow: [
+                              BoxShadow(color: Colors.black.withOpacity(0.6), offset: const Offset(2, 2), spreadRadius: 3, blurRadius: 5),
+                              BoxShadow(color: backgroundColors[val.selectedBackground].main, offset: const Offset(-2, -2), spreadRadius: 2, blurRadius: 4)
+                            ]),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(14),
                               child: Stack(
@@ -141,48 +109,31 @@ class MemeListState extends State<MemeList> {
                                       key: provMemes.memes[index].imageGlobal,
                                       child: CachedNetworkImage(
                                         imageUrl: provMemes.memes[index].getUrl,
-                                        progressIndicatorBuilder:
-                                            (context, url, progress) => Center(
-                                          child: Consumer<ThemeMeme>(
-                                              builder: (context, val, _) {
-                                            return CircularProgressIndicator(
-                                                valueColor:
-                                                    AlwaysStoppedAnimation<
-                                                        Color>(appColors[val
-                                                            .selectedAppColor]
-                                                        .main),
-                                                value: progress.progress);
+                                        progressIndicatorBuilder: (context, url, progress) => Center(
+                                          child: Consumer<ThemeMeme>(builder: (context, val, _) {
+                                            return CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(appColors[val.selectedAppColor].main), value: progress.progress);
                                           }),
                                         ),
                                       ),
                                     ),
                                   ),
                                   Consumer<ThemeMeme>(
-                                    builder: (context, value, child) =>
-                                        value.isDarkMode
-                                            ? Positioned.fill(
-                                                child: Container(
-                                                decoration: BoxDecoration(
-                                                    color: Colors.black
-                                                        .withOpacity(0.5)),
-                                              ))
-                                            : Container(),
+                                    builder: (context, value, child) => value.isDarkMode
+                                        ? Positioned.fill(
+                                            child: Container(
+                                            decoration: BoxDecoration(color: Colors.black.withOpacity(0.5)),
+                                          ))
+                                        : Container(),
                                   ),
                                   Positioned.fill(
                                       child: Material(
                                     color: Colors.transparent,
-                                    child: Consumer<ThemeMeme>(
-                                        builder: (context, val, _) {
+                                    child: Consumer<ThemeMeme>(builder: (context, val, _) {
                                       return InkWell(
-                                        onTap: () =>
-                                            _animateToIndex(index, size),
-                                        onLongPress: () =>
-                                            onTapBottomSheet(index, size),
+                                        onTap: () => _animateToIndex(index, size),
+                                        onLongPress: () => onTapBottomSheet(index, size),
                                         highlightColor: Colors.transparent,
-                                        splashColor:
-                                            appColors[val.selectedAppColor]
-                                                .main
-                                                .withOpacity(0.3),
+                                        splashColor: appColors[val.selectedAppColor].main.withOpacity(0.3),
                                       );
                                     }),
                                   ))
@@ -201,9 +152,7 @@ class MemeListState extends State<MemeList> {
 
   onTapBottomSheet(int index, Size size) {
     showModalBottomSheet(
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
         builder: (context) {
           return SheetsMemeOptions(
@@ -221,32 +170,19 @@ class MemeListState extends State<MemeList> {
 
   _animateToIndex(i, size) {
     //Sum all the heights
-    double totalHeight = 8 +
-        GetIt.I<ProviderMemes>()
-            .memes
-            .sublist(0, i + 1)
-            .map((e) => calcWidgetHeight(e, size) + 20)
-            .reduce((value, element) => value + element);
+    double totalHeight = 8 + GetIt.I<ProviderMemes>().memes.sublist(0, i + 1).map((e) => calcWidgetHeight(e, size) + 20).reduce((value, element) => value + element);
 
-    scrollController.animateTo(totalHeight,
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.fastLinearToSlowEaseIn);
+    scrollController.animateTo(totalHeight, duration: const Duration(milliseconds: 100), curve: Curves.fastLinearToSlowEaseIn);
   }
 
   saveLastID() {
     SharedPreferences.getInstance().then((prefs) {
-      String lstMemeJSon =
-          prefs.getString(GetIt.I<ProviderMemes>().subreddit) ?? '';
+      String lstMemeJSon = prefs.getString(GetIt.I<ProviderMemes>().subreddit) ?? '';
       if (lstMemeJSon.isEmpty) return;
       LastMeme lastMeme = LastMeme.fromJson(lstMemeJSon);
 
       if (lstMemeJSon == "") {
-        prefs.setString(
-            GetIt.I<ProviderMemes>().subreddit,
-            LastMeme(
-                    lastID: GetIt.I<ProviderMemes>().memes.last.getId,
-                    lastAccessed: DateTime.now())
-                .toJson());
+        prefs.setString(GetIt.I<ProviderMemes>().subreddit, LastMeme(lastID: GetIt.I<ProviderMemes>().memes.last.getId, lastAccessed: DateTime.now()).toJson());
       } else {
         lastMeme.lastID = GetIt.I<ProviderMemes>().memes.last.getId;
         prefs.setString(GetIt.I<ProviderMemes>().subreddit, lastMeme.toJson());

@@ -1,5 +1,5 @@
-import 'dart:collection';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -13,20 +13,21 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:ui' as ui;
 
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' show parse;
+import 'package:html/dom.dart' as dom;
+
 import 'package:share_plus/share_plus.dart';
 
 class ProviderMemes extends ChangeNotifier {
-  Reddit? reddit;
+  // Reddit? reddit;
   bool isLoading = false;
   String subreddit = "memes";
   List<Meme> memes = [];
   String? lastMeme;
 
   Future<void> setupReddit() async {
-    reddit = await Reddit.createReadOnlyInstance(
-        clientId: "Y82I2nvR-d4CNg",
-        clientSecret: "mTPPwrOque6TX2WuEAqiMp1b6SU",
-        userAgent: "whatever");
+    // reddit = await Reddit.createReadOnlyInstance(clientId: "Y82I2nvR-d4CNg", clientSecret: "mTPPwrOque6TX2WuEAqiMp1b6SU", userAgent: "whatever");
     notifyListeners();
   }
 
@@ -42,11 +43,7 @@ class ProviderMemes extends ChangeNotifier {
       PermissionStatus status = await Permission.storage.request();
       if (status.isDenied) return;
     }
-    RenderRepaintBoundary? boundary = GetIt.I<ProviderMemes>()
-        .memes[index]
-        .imageGlobal
-        ?.currentContext
-        ?.findRenderObject() as RenderRepaintBoundary?;
+    RenderRepaintBoundary? boundary = GetIt.I<ProviderMemes>().memes[index].imageGlobal?.currentContext?.findRenderObject() as RenderRepaintBoundary?;
     if (boundary == null) return;
     ui.Image image = await boundary.toImage(pixelRatio: 3.0);
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
@@ -54,8 +51,7 @@ class ProviderMemes extends ChangeNotifier {
     // String bs64 = base64Encode(pngBytes);
 
     getExternalStorageDirectory().then((directory) {
-      File imageFile = File(
-          "${directory!.path}/${GetIt.I<ProviderMemes>().memes[index].getId}.png");
+      File imageFile = File("${directory!.path}/${GetIt.I<ProviderMemes>().memes[index].getId}.png");
       imageFile.writeAsBytesSync(pngBytes);
       GetIt.I<ThemeMeme>().showToast(Icons.thumb_up, "Saved Image");
     });
@@ -66,11 +62,7 @@ class ProviderMemes extends ChangeNotifier {
       PermissionStatus status = await Permission.storage.request();
       if (status.isDenied) return;
     }
-    RenderRepaintBoundary? boundary = GetIt.I<ProviderMemes>()
-        .memes[index]
-        .imageGlobal
-        ?.currentContext
-        ?.findRenderObject() as RenderRepaintBoundary?;
+    RenderRepaintBoundary? boundary = GetIt.I<ProviderMemes>().memes[index].imageGlobal?.currentContext?.findRenderObject() as RenderRepaintBoundary?;
     if (boundary == null) return;
 
     ui.Image image = await boundary.toImage(pixelRatio: 3.0);
@@ -93,24 +85,12 @@ class ProviderMemes extends ChangeNotifier {
     if (isLoading) return;
     isLoading = true;
     notifyListeners();
-    if (reddit == null) await setupReddit();
+    // if (reddit == null) await setupReddit();
     try {
-      List<UserContent> content = await reddit!
-          .subreddit(subreddit)
-          .hot(limit: 30, after: lastMeme)
-          .toList();
+      List<Map<String, String>> content = await getRedditMemes(count: 25 + memes.length, after: lastMeme);
+      // List<UserContent> content = await reddit!.subreddit(subreddit).hot(limit: 30, after: lastMeme).toList();
 
-      memes.addAll(content
-          .map((e) => json.decode(e.toString()))
-          .toList()
-          .where((element) => imageFilter(element))
-          .map((e) => Meme(
-              imageGlobal: GlobalKey(),
-              id: e['name'],
-              url: e['url'],
-              height: e['preview']['images'][0]['source']['height'].toString(),
-              width: e['preview']['images'][0]['source']['width'].toString()))
-          .toList());
+      memes.addAll(content.map((e) => Meme(imageGlobal: GlobalKey(), id: e['title'] ?? "", url: e['imageUrl'] ?? "", height: '200', width: '200')).toList());
 
       isLoading = false;
       notifyListeners();
@@ -121,8 +101,44 @@ class ProviderMemes extends ChangeNotifier {
       }
     } catch (e) {
       //Show toast
-      print("Error occurred");
+      log("Error occurred ");
+      log("Error occurred $e");
       GetIt.I<ThemeMeme>().showToast(Icons.error, "Error Loading memes");
+    }
+  }
+
+  Future<List<Map<String, String>>> getRedditMemes({String? after, int? count}) async {
+    String url = 'https://old.reddit.com/r/memes/';
+    try {
+      if (after != null && count != null) {
+        url += '?count=$count&after=$after';
+      }
+
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        var document = parse(response.body);
+        List<dom.Element> links = document.querySelectorAll('a.title');
+
+        var items = <Map<String, String>>[];
+
+        for (var link in links) {
+          final href = link.attributes['href'];
+          final title = link.text;
+
+          if (href != null && (href.endsWith('.jpg') || href.endsWith('.png'))) {
+            items.add({'title': title, 'imageUrl': href.startsWith('http') ? href : 'https://old.reddit.com$href'});
+          }
+        }
+
+        return items;
+      } else {
+        log("Exception loading memes");
+        throw Exception('Failed to load memes');
+      }
+    } catch (e) {
+      log("Exception loading memes $e");
+      return [];
     }
   }
 
@@ -130,10 +146,6 @@ class ProviderMemes extends ChangeNotifier {
     bool hasCrappyInternet = GetIt.I<ThemeMeme>().hasCrappyInternet;
     return element['url'].toString().contains("i.redd") &&
         !element['url'].toString().contains(".gif") &&
-        ((hasCrappyInternet &&
-                (element['preview']['images'][0]['source']['height'] *
-                        element['preview']['images'][0]['source']['width'] <
-                    2250000)) ||
-            !hasCrappyInternet);
+        ((hasCrappyInternet && (element['preview']['images'][0]['source']['height'] * element['preview']['images'][0]['source']['width'] < 2250000)) || !hasCrappyInternet);
   }
 }
