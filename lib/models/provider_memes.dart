@@ -81,6 +81,7 @@ class ProviderMemes extends ChangeNotifier {
     });
   }
 
+
   void requestNextPage() async {
     if (isLoading) return;
     isLoading = true;
@@ -88,7 +89,6 @@ class ProviderMemes extends ChangeNotifier {
     // if (reddit == null) await setupReddit();
     try {
       List<Map<String, String>> content = await getRedditMemes(count: 25 + memes.length, after: lastMeme);
-      // List<UserContent> content = await reddit!.subreddit(subreddit).hot(limit: 30, after: lastMeme).toList();
 
       memes.addAll(content.map((e) => Meme(imageGlobal: GlobalKey(), id: e['title'] ?? "", url: e['imageUrl'] ?? "", height: '200', width: '200')).toList());
 
@@ -107,27 +107,56 @@ class ProviderMemes extends ChangeNotifier {
     }
   }
 
+  Future<List<Map<String, String>>> getImagesFromReddit(int page) async {
+    final url = 'https://old.reddit.com/r/memes/hot.json?limit=20&page=$page';
+    log("getting url $url");
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      var items = <Map<String, String>>[];
+      final posts = json['data']['children'].map((post) {
+        final imageUrl = post['data']['url'];
+        final postId = post['data']['id'];
+        if (imageUrl.toString().startsWith("https://i.redd.it")) {
+          items.add({'title': postId, 'imageUrl': imageUrl});
+        }
+        // return ImagePost(imageUrl, postId);
+      }).toList();
+
+      return items;
+    } else {
+      throw Exception('Failed to get images from Reddit');
+    }
+  }
+
   Future<List<Map<String, String>>> getRedditMemes({String? after, int? count}) async {
     String url = 'https://old.reddit.com/r/memes/';
     try {
       if (after != null && count != null) {
         url += '?count=$count&after=$after';
       }
-
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         var document = parse(response.body);
-        List<dom.Element> links = document.querySelectorAll('a.title');
-
         var items = <Map<String, String>>[];
-
-        for (var link in links) {
+        List<dom.Element> links = document.querySelectorAll('a.title');
+        List<dom.Element> posts = document.querySelectorAll('div.thing');
+        for (var i = 0; i < links.length; i++) {
+          final link = links[i];
+          final post = posts[i];  // Corresponding post element
+          
           final href = link.attributes['href'];
           final title = link.text;
+          final id = post.attributes['data-fullname'];  // Extracting the unique ID
 
           if (href != null && (href.endsWith('.jpg') || href.endsWith('.png'))) {
-            items.add({'title': title, 'imageUrl': href.startsWith('http') ? href : 'https://old.reddit.com$href'});
+            items.add({
+              'id': id ?? "",   // Adding the id field here
+              'title': id ?? "", 
+              'imageUrl': href.startsWith('http') ? href : 'https://old.reddit.com$href'
+            });
           }
         }
 
