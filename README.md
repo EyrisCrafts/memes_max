@@ -2,9 +2,7 @@
 
 You can download from the releases side tab or from the playstore https://play.google.com/store/apps/details?id=com.eyriscrafts.memesmax
 
-Flutter made, using a clean code architecture.
-
-Github stars are always a welcome. 
+Made in flutter. Star the repo if you think it looks great :)
 
 Features:
 
@@ -15,7 +13,7 @@ Features:
 5. Absolute kickass user interface. Clean and minimalist
 6. Have Crappy internet? We have a setting for you, where we optimize our meme retrieval APIs to suit your crappy internet !
 
-Reddit api used !
+Reddit scrapping used !
 
 ![image](images/image2.jpeg)
 
