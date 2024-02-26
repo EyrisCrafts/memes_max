@@ -81,13 +81,13 @@ class ProviderMemes extends ChangeNotifier {
     });
   }
 
-
   void requestNextPage() async {
     if (isLoading) return;
     isLoading = true;
     notifyListeners();
     // if (reddit == null) await setupReddit();
     try {
+      log("Requesting next page");
       List<Map<String, String>> content = await getRedditMemes(count: 25 + memes.length, after: lastMeme);
 
       memes.addAll(content.map((e) => Meme(imageGlobal: GlobalKey(), id: e['title'] ?? "", url: e['imageUrl'] ?? "", height: '200', width: '200')).toList());
@@ -130,7 +130,7 @@ class ProviderMemes extends ChangeNotifier {
     }
   }
 
-  Future<List<Map<String, String>>> getRedditMemes({String? after, int? count}) async {
+  Future<List<Map<String, String>>> getRedditMemes({String? after, int? count, retry = 0}) async {
     String url = 'https://old.reddit.com/r/memes/';
     try {
       if (after != null && count != null) {
@@ -145,22 +145,29 @@ class ProviderMemes extends ChangeNotifier {
         List<dom.Element> posts = document.querySelectorAll('div.thing');
         for (var i = 0; i < links.length; i++) {
           final link = links[i];
-          final post = posts[i];  // Corresponding post element
-          
+          final post = posts[i]; // Corresponding post element
+
           final href = link.attributes['href'];
           final title = link.text;
-          final id = post.attributes['data-fullname'];  // Extracting the unique ID
+          final id = post.attributes['data-fullname']; // Extracting the unique ID
 
           if (href != null && (href.endsWith('.jpg') || href.endsWith('.png'))) {
             items.add({
-              'id': id ?? "",   // Adding the id field here
-              'title': id ?? "", 
+              'id': id ?? "", // Adding the id field here
+              'title': id ?? "",
               'imageUrl': href.startsWith('http') ? href : 'https://old.reddit.com$href'
             });
           }
         }
 
-        return items;
+        // Retry if no images found
+        if (items.isEmpty && retry < 3) {
+          log("No images found, retrying $retry");
+          return getRedditMemes(after: after, count: count, retry: retry + 1);
+        } else {
+          log("Returning items");
+          return items;
+        }
       } else {
         log("Exception loading memes");
         throw Exception('Failed to load memes');

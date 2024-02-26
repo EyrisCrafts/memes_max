@@ -51,7 +51,7 @@ class SheetSettings extends StatelessWidget {
                 IconButton(
                     icon: const Icon(
                       Icons.radio_button_off,
-                      color: Colors.grey,
+                      color: Colors.white,
                     ),
                     onPressed: () {
                       GetIt.I<ThemeMeme>().updateBackgroundColor(0);

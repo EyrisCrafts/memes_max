@@ -66,7 +66,7 @@ class MemeListState extends State<MemeList> {
           },
           child: Consumer<ProviderMemes>(builder: (context, provMemes, _) {
             return ListView.builder(
-                physics: const BouncingScrollPhysics(),
+                // physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                 controller: scrollController,
                 itemBuilder: (context, index) {
@@ -95,9 +95,14 @@ class MemeListState extends State<MemeList> {
                             margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                             width: size.width - 20,
                             height: widgetHeight,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), boxShadow: [
-                              BoxShadow(color: Colors.black.withOpacity(0.6), offset: const Offset(2, 2), spreadRadius: 3, blurRadius: 5),
-                              BoxShadow(color: backgroundColors[val.selectedBackground].main, offset: const Offset(-2, -2), spreadRadius: 2, blurRadius: 4)
+                            decoration: BoxDecoration(
+                              color: backgroundColors[val.selectedBackground].shade,
+                              borderRadius: BorderRadius.circular(5), boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.grey
+                                )
+                              // BoxShadow(color: backgroundColors[val.selectedBackground].main, offset: const Offset(1, 1), spreadRadius: 3, blurRadius: 2),
+                              // BoxShadow(color: backgroundColors[val.selectedBackground].main, offset: const Offset(-2, -2), spreadRadius: 2, blurRadius: 4)
                             ]),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(14),

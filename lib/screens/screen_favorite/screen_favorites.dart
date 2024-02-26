@@ -108,21 +108,21 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                       const EdgeInsets.fromLTRB(10, 10, 10, 10),
                                   width: size.width - 20,
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(18),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.6),
-                                            offset: const Offset(2, 2),
-                                            spreadRadius: 3,
-                                            blurRadius: 5),
-                                        BoxShadow(
-                                            color: backgroundColors[
-                                                    val.selectedBackground]
-                                                .shade,
-                                            offset: const Offset(-2, -2),
-                                            spreadRadius: 2,
-                                            blurRadius: 4)
+                                      borderRadius: BorderRadius.circular(5),
+                                      boxShadow: const [
+                                        // BoxShadow(
+                                        //     color:
+                                        //         Colors.black.withOpacity(0.6),
+                                        //     offset: const Offset(2, 2),
+                                        //     spreadRadius: 3,
+                                        //     blurRadius: 5),
+                                        // BoxShadow(
+                                        //     color: backgroundColors[
+                                        //             val.selectedBackground]
+                                        //         .shade,
+                                        //     offset: const Offset(-2, -2),
+                                        //     spreadRadius: 2,
+                                        //     blurRadius: 4)
                                       ]),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(14),

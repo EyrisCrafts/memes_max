@@ -28,8 +28,8 @@ List<String> memeCategories = const [
 ];
 
 List<BackgroundColor> backgroundColors = [
-  BackgroundColor(Colors.grey, Colors.white),
-  BackgroundColor(const Color(0xff1B2836), const Color(0xff003f87)),
+  BackgroundColor(const Color(0xfff0f0f0), Colors.white),
+  BackgroundColor(const Color(0xff1B2836), const Color(0xff0b1117)),
 ];
 
 final List<AppColor> appColors = [
